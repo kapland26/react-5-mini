@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {connect} from 'react-redux';
-import {increment, decrement} from './ducks/counter.js';
+import {increment, decrement, undo, redo} from './ducks/counter.js';
 import "./App.css";
 
 class App extends Component {
@@ -37,15 +37,15 @@ class App extends Component {
             <br />
             <button
               className="counter__button undo"
-              disabled={ true }
-              onClick={ () => null }
+              disabled={(this.props.previousValues.length === 0)}
+              onClick={ () => this.props.undo() }
             >
               Undo
             </button>
             <button
               className="counter__button redo"
-              disabled={ true }
-              onClick={ () => null }
+              disabled={this.props.futureValues.length === 0}
+              onClick={ () => this.props.redo() }
             >
               Redo
             </button>
@@ -63,8 +63,10 @@ class App extends Component {
 
 function mapStateToProps(state){
   return{
-    currentValue: state.currentValue
+    currentValue: state.currentValue,
+    previousValues: state.previousValues,
+    futureValues: state.futureValues
   }
 }
 
-export default connect(mapStateToProps, {increment, decrement})(App);
+export default connect(mapStateToProps, {increment, decrement, undo, redo})(App);
